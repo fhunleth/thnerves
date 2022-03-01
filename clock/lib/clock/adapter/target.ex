@@ -7,7 +7,7 @@ defmodule Clock.Adapter.Target do
     :timer.send_interval(1_000, :tick)
 
     bus = bus || hd(SPI.bus_names())
-    {:ok, spi} = SPI.open(bus)
+    {:ok, spi} = SPI.open(bus, mode: 3, lsb_first: true)
     %__MODULE__{time: time, spi: spi}
   end
 
@@ -18,8 +18,11 @@ defmodule Clock.Adapter.Target do
   end
 
   defp transfer(adapter) do
-    bytes = adapter.time |> Core.new() |> Core.to_leds(:bytes)
-    SPI.transfer(adapter.spi, bytes)
+    adapter.time
+    |> Core.new()
+    |> Core.to_leds(:spi)
+    |> Enum.each(&SPI.transfer!(adapter.spi, &1))
+
     adapter
   end
 end

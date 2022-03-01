@@ -10,7 +10,7 @@ defmodule AdapterTest do
 
     [second, first] = adapter.bits
 
-    assert [0, 0, 1 | _rest] = first
-    assert [1, 0, 1, 0, 0, 0, 1 | _rest] = second
+    assert [0, 1, 0, 2, 0, 4] = first
+    assert [0, 1, 0, 2, 0, 5] = second
   end
 end

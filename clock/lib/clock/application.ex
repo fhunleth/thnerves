@@ -10,23 +10,9 @@ defmodule Clock.Application do
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Clock.Supervisor]
 
-    children =
-      [
-        # Children for all targets
-        # Starts a worker by calling: Clock.Worker.start_link(arg)
-        # {Clock.Worker, arg},
-      ] ++ children(target())
+    children = [{Clock.Server, Application.get_all_env(:clock)}]
 
     Supervisor.start_link(children, opts)
-  end
-
-  # List all child processes to be supervised
-  def children(:host) do
-    [{Clock.Server, Application.get_all_env(:clock)}]
-  end
-
-  def children(_target) do
-    [{Clock.Server, Application.get_all_env(:clock)}]
   end
 
   def target() do
